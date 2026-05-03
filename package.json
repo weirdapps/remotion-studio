@@ -2,12 +2,16 @@
   "name": "remotion-studio",
   "version": "1.0.0",
   "description": "Programmatic video creation with React and Remotion",
+  "type": "module",
   "scripts": {
     "studio": "remotion studio",
     "render": "remotion render src/index.ts",
     "build": "remotion render src/index.ts --codec h264",
     "still": "remotion still src/index.ts",
-    "upgrade": "remotion upgrade"
+    "upgrade": "remotion upgrade",
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "test:coverage": "echo 'No tests configured yet' && exit 0"
   },
   "dependencies": {
     "@remotion/bundler": "^4",
@@ -20,7 +24,13 @@
   "devDependencies": {
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "typescript": "^5"
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.0.1",
+    "prettier": "^3.4.2",
+    "typescript": "^5",
+    "typescript-eslint": "^8.21.0"
   },
   "overrides": {
     "postcss": ">=8.5.10"
