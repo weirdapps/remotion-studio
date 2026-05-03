@@ -1,0 +1,28 @@
+{
+  "name": "remotion-studio",
+  "version": "1.0.0",
+  "description": "Programmatic video creation with React and Remotion",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render src/index.ts",
+    "build": "remotion render src/index.ts --codec h264",
+    "still": "remotion still src/index.ts",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4",
+    "@remotion/cli": "^4",
+    "@remotion/renderer": "^4",
+    "react": "^19",
+    "react-dom": "^19",
+    "remotion": "^4"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": ">=8.5.10"
+  }
+}
