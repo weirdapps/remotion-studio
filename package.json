@@ -11,7 +11,9 @@
     "upgrade": "remotion upgrade",
     "lint": "eslint",
     "format": "prettier --write .",
-    "test:coverage": "echo 'No tests configured yet' && exit 0"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@remotion/bundler": "^4",
@@ -22,15 +24,21 @@
     "remotion": "^4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^9.39.0",
     "eslint-config-prettier": "^10.0.1",
+    "happy-dom": "^20.9.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.4.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.21.0"
+    "typescript-eslint": "^8.21.0",
+    "vitest": "^4.1.5"
   },
   "overrides": {
     "postcss": ">=8.5.10"
