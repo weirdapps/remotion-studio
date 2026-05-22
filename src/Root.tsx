@@ -1,5 +1,16 @@
 import React from 'react';
+import { Composition } from 'remotion';
+import { AccountingHorror } from './compositions/AccountingHorror';
 
 export const RemotionRoot: React.FC = () => {
-  return <></>;
+  return (
+    <Composition
+      id="AccountingHorror"
+      component={AccountingHorror}
+      durationInFrames={78 * 30}
+      fps={30}
+      width={1920}
+      height={1080}
+    />
+  );
 };
