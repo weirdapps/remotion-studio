@@ -16,9 +16,9 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@remotion/bundler": "^4.0.477",
-    "@remotion/cli": "^4.0.477",
-    "@remotion/renderer": "^4.0.457",
+    "@remotion/bundler": "^4.0.481",
+    "@remotion/cli": "^4.0.481",
+    "@remotion/renderer": "^4.0.481",
     "react": "^19",
     "react-dom": "^19",
     "remotion": "^4.0.457"
