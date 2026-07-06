@@ -1,31 +1,37 @@
 # remotion-studio
 
+Programmatic video creation with React and Remotion.
+
 [![CI](https://github.com/weirdapps/remotion-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/weirdapps/remotion-studio/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-brightgreen)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/)
-[![Remotion](https://img.shields.io/badge/Remotion-4.x-6B21A8)](https://www.remotion.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20-brightgreen)](https://nodejs.org/)
 
-Write videos in React. Render them to MP4.
+Compositions are written as React components using the Remotion 4 primitives (`AbsoluteFill`, `Sequence`, `Audio`, `Img`, `useCurrentFrame`, `spring`, `interpolate`). Preview is served by the Remotion Studio browser UI with hot reload; rendering runs headlessly through the Remotion CLI or through the small programmatic wrapper `render.mts` that ships with the repo.
 
-`remotion-studio` is a scaffold for building video compositions entirely in code — title cards, text reveals, data visualisations, animated charts — and rendering them headlessly to production-ready MP4 files. No timeline scrubbing in a GUI editor, no keyframe exports: the video is just a React component.
+This is the public scaffold. NBG-specific brand assets and internal compositions live in the sibling private repo `remotion-private`.
 
-The built-in Remotion Studio provides a browser-based preview with hot reload, a scrubbable timeline, and live prop editing. Rendering is done via the CLI or a programmatic TypeScript render script included in the repo.
+## Compositions
 
-## Features
+Registered in [`src/Root.tsx`](src/Root.tsx).
 
-- **React-first authoring** — compositions are React components; anything you can render in React you can put in a video
-- **Headless rendering** — render MP4s from the CLI or from code, no GUI required
-- **Hot-reload preview** — Remotion Studio at `localhost:3000` with frame-accurate scrubbing
-- **Programmatic render script** — `render.mts` wraps the Remotion renderer with typed props
-- **Full TypeScript** — end-to-end types from composition props to render config
-- **Tested** — Vitest + React Testing Library; CI runs typecheck, lint, and tests on every push
+| id                 | Description                                                                                                                                                                                                                                                 | Dimensions | Duration                     |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------- |
+| `DemoComposition` | 8-scene narrative video (cover, three-number setup, priority reveal, EUR count-up to [redacted], drumbeat facts list, [redacted], verdict on dark teal, logo outro). Uses NBG palette, `Aptos` typography, static audio and logo from `public/`. | 1920x1080  | 2340 frames at 30 fps (78 s) |
 
-## Prerequisites
+Adding a composition (see the section below) extends this table.
 
-- Node.js ≥ 20
-- ffmpeg (`brew install ffmpeg` on macOS)
+## Runtime assets
+
+`public/` is gitignored except for `.gitkeep`. `DemoComposition` references two files that must be present locally before rendering:
+
+- `public/nbg-logo.png`
+- `public/jaws_tension.mp3`
+
+A fresh clone does not include them. Populate `public/` before running `npm run studio` or any render command.
+
+## Requirements
+
+- Node.js 20 (the version pinned in CI).
 
 ## Install
 
@@ -39,49 +45,120 @@ npm install
 npm run studio
 ```
 
-Opens Remotion Studio at http://localhost:3000 with hot reload — preview compositions, scrub the timeline, tweak props live.
+Opens the Remotion Studio preview at `http://localhost:3000` with hot reload, timeline scrubbing, and live prop editing.
 
 ## Render
 
+The `npm` scripts wrap `remotion` with the entry point `src/index.ts`:
+
 ```bash
-# Render a composition by id (registered in src/Root.tsx)
-npx remotion render src/index.ts <CompositionId> out/video.mp4
+# Render the default composition to MP4 (h264)
+npm run build
 
-# Pass props inline
-npx remotion render src/index.ts <CompositionId> out/video.mp4 --props '{}'
+# Render an arbitrary composition by id, positional args go after --
+npx remotion render src/index.ts DemoComposition out/video.mp4
 
-# Render a single still frame
-npx remotion still src/index.ts <CompositionId> out/frame.png --frame 30
-
-# Programmatic render via the included script
-npx tsx render.mts --comp <CompositionId> --props '{}'
+# Render a single still frame to PNG
+npx remotion still src/index.ts DemoComposition out/frame.png --frame 30
 
 # List all registered compositions
 npx remotion compositions src/index.ts
 ```
 
-Output goes to `out/` (gitignored).
+Alternative: the programmatic wrapper in [`render.mts`](render.mts) drives `@remotion/bundler` and `@remotion/renderer` directly and accepts typed args:
+
+```bash
+# Video (default)
+npx tsx render.mts --comp DemoComposition --out out/video.mp4
+
+# Still
+npx tsx render.mts --comp DemoComposition --still --frame 60 --out out/frame.png
+
+# Custom codec (h264, h265, vp8, vp9)
+npx tsx render.mts --comp DemoComposition --codec vp9 --out out/video.webm
+
+# Pass input props as JSON
+npx tsx render.mts --comp DemoComposition --props '{"title":"Hello"}'
+```
+
+Output goes to `out/` (gitignored). `.mp4` and `.webm` files are also gitignored globally.
 
 ## Adding a composition
 
-1. Create a new `.tsx` file in `src/compositions/`
-2. Export a React component that uses `useCurrentFrame()` and `useVideoConfig()`
-3. Register it as a `<Composition>` in `src/Root.tsx`
-4. Use `spring()` for organic motion, `interpolate()` for linear value mappings
+1. Create a new `.tsx` file under `src/compositions/` that exports a React component. Use `useCurrentFrame()` for the current frame, `useVideoConfig()` for `fps`, `width`, `height`, `spring()` for organic motion, and `interpolate()` for linear value mapping. Avoid CSS transitions (they do not render frame-accurately).
+2. Import the component in [`src/Root.tsx`](src/Root.tsx) and register it as a `<Composition>` with explicit `id`, `component`, `durationInFrames`, `fps`, `width`, `height`, and `defaultProps` if the component takes props.
+3. Reference any static asset with `staticFile('name.ext')` and put the file in `public/` (local only, gitignored).
 
-## Project layout
+## Configuration
+
+- [`tsconfig.json`](tsconfig.json): ES2022, `moduleResolution: bundler`, `jsx: react-jsx`, strict mode on, output at `dist/` (Remotion bundles do not use this; it exists for type declarations).
+- [`vitest.config.ts`](vitest.config.ts): `happy-dom` environment, tests under `test/`.
+- [`eslint.config.js`](eslint.config.js): flat config, TypeScript + Prettier compatibility.
+- No `remotion.config.ts` is present; the Remotion CLI uses its defaults.
+
+## Scripts
+
+Full list from [`package.json`](package.json):
+
+| Script                  | What it runs                                            |
+| ----------------------- | ------------------------------------------------------- |
+| `npm run studio`        | `remotion studio` (browser preview at `:3000`)          |
+| `npm run render`        | `remotion render src/index.ts` (positional args follow) |
+| `npm run build`         | `remotion render src/index.ts --codec h264`             |
+| `npm run still`         | `remotion still src/index.ts`                           |
+| `npm run upgrade`       | `remotion upgrade` (bump Remotion packages together)    |
+| `npm run lint`          | `eslint`                                                |
+| `npm run format`        | `prettier --write .`                                    |
+| `npm test`              | `vitest run`                                            |
+| `npm run test:watch`    | `vitest` in watch mode                                  |
+| `npm run test:coverage` | `vitest run --coverage`                                 |
+
+## Testing
+
+Tests live in `test/` and run under Vitest with `happy-dom` and React Testing Library:
+
+- `test/Root.test.tsx`: smoke-renders `RemotionRoot`.
+- `test/render-config.test.ts`: sanity checks on render configuration.
+- `test/render-script.test.ts`: covers argument-parsing patterns used by `render.mts` without actually invoking a render.
+
+```bash
+npm test
+```
+
+## CI
+
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml): on push and PR to `master`, installs with `npm ci`, then runs `npx tsc --noEmit`, `npm run lint`, `npm test`.
+- [`.github/workflows/sonarcloud.yml`](.github/workflows/sonarcloud.yml): SonarCloud scan on push and PR (skips gracefully if `SONAR_TOKEN` is not configured).
+- [`.github/workflows/deps-refresh.yml`](.github/workflows/deps-refresh.yml): monthly Dependabot lockfile refresh via the shared `weirdapps/shared-workflows` reusable workflow, gated on `npm test`.
+- [`.github/workflows/dependabot-auto-merge.yml`](.github/workflows/dependabot-auto-merge.yml): auto-merges Dependabot patch and minor updates.
+
+## Layout
 
 ```text
-src/
-  index.ts          — Remotion entry point (registers Root)
-  Root.tsx          — composition registry
-  compositions/     — individual video compositions
-  lib/              — shared utilities and helpers
-render.mts          — programmatic render script
-public/             — runtime assets (gitignored; populate locally)
-out/                — render output (gitignored)
+.
+├── src/
+│   ├── index.ts               # Remotion entry point, calls registerRoot
+│   ├── Root.tsx               # composition registry (add <Composition> here)
+│   ├── compositions/          # one file per composition
+│   │   └── DemoComposition.tsx
+│   └── lib/                   # shared utilities (currently empty)
+├── test/                      # Vitest tests
+├── public/                    # runtime assets (gitignored except .gitkeep)
+├── render.mts                 # programmatic render wrapper
+├── package.json
+├── tsconfig.json
+├── vitest.config.ts
+└── eslint.config.js
 ```
+
+## Security
+
+See [`SECURITY.md`](SECURITY.md) for the vulnerability-reporting process.
+
+## Remotion license
+
+Remotion has its own license terms in addition to the MIT license of this repo (some usage tiers require a company license from the Remotion team). Consult the Remotion documentation before using this scaffold in a commercial product.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [`LICENSE`](LICENSE). Copyright (c) 2026 Dimitrios Plessas.
