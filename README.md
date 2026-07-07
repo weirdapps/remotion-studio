@@ -12,22 +12,11 @@ This is the public scaffold. NBG-specific brand assets and internal compositions
 
 ## Compositions
 
-Registered in [`src/Root.tsx`](src/Root.tsx).
-
-| id                 | Description                                                                                                                                                                                                                                                 | Dimensions | Duration                     |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------- |
-| `DemoComposition` | 8-scene narrative video (cover, three-number setup, priority reveal, EUR count-up to [redacted], drumbeat facts list, [redacted], verdict on dark teal, logo outro). Uses NBG palette, `Aptos` typography, static audio and logo from `public/`. | 1920x1080  | 2340 frames at 30 fps (78 s) |
-
-Adding a composition (see the section below) extends this table.
+Compositions are registered in [`src/Root.tsx`](src/Root.tsx). The registry is currently empty; see [Adding a composition](#adding-a-composition) to create your first one.
 
 ## Runtime assets
 
-`public/` is gitignored except for `.gitkeep`. `DemoComposition` references two files that must be present locally before rendering:
-
-- `public/nbg-logo.png`
-- `public/jaws_tension.mp3`
-
-A fresh clone does not include them. Populate `public/` before running `npm run studio` or any render command.
+`public/` is gitignored except for `.gitkeep`. Compositions reference static assets (images, audio, and so on) with `staticFile('name.ext')`, and those files must exist under `public/` locally before rendering. A fresh clone does not include them, so populate `public/` before running `npm run studio` or any render command.
 
 ## Requirements
 
@@ -56,10 +45,10 @@ The `npm` scripts wrap `remotion` with the entry point `src/index.ts`:
 npm run build
 
 # Render an arbitrary composition by id, positional args go after --
-npx remotion render src/index.ts DemoComposition out/video.mp4
+npx remotion render src/index.ts MyComposition out/video.mp4
 
 # Render a single still frame to PNG
-npx remotion still src/index.ts DemoComposition out/frame.png --frame 30
+npx remotion still src/index.ts MyComposition out/frame.png --frame 30
 
 # List all registered compositions
 npx remotion compositions src/index.ts
@@ -69,16 +58,16 @@ Alternative: the programmatic wrapper in [`render.mts`](render.mts) drives `@rem
 
 ```bash
 # Video (default)
-npx tsx render.mts --comp DemoComposition --out out/video.mp4
+npx tsx render.mts --comp MyComposition --out out/video.mp4
 
 # Still
-npx tsx render.mts --comp DemoComposition --still --frame 60 --out out/frame.png
+npx tsx render.mts --comp MyComposition --still --frame 60 --out out/frame.png
 
 # Custom codec (h264, h265, vp8, vp9)
-npx tsx render.mts --comp DemoComposition --codec vp9 --out out/video.webm
+npx tsx render.mts --comp MyComposition --codec vp9 --out out/video.webm
 
 # Pass input props as JSON
-npx tsx render.mts --comp DemoComposition --props '{"title":"Hello"}'
+npx tsx render.mts --comp MyComposition --props '{"title":"Hello"}'
 ```
 
 Output goes to `out/` (gitignored). `.mp4` and `.webm` files are also gitignored globally.
@@ -139,8 +128,7 @@ npm test
 ├── src/
 │   ├── index.ts               # Remotion entry point, calls registerRoot
 │   ├── Root.tsx               # composition registry (add <Composition> here)
-│   ├── compositions/          # one file per composition
-│   │   └── DemoComposition.tsx
+│   ├── compositions/          # one file per composition (currently empty)
 │   └── lib/                   # shared utilities (currently empty)
 ├── test/                      # Vitest tests
 ├── public/                    # runtime assets (gitignored except .gitkeep)

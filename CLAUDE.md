@@ -56,6 +56,6 @@ test/                   — Vitest test files
 
 - Register every new composition in `src/Root.tsx` as a `<Composition>` with explicit `durationInFrames`, `fps`, `width`, `height`, and `defaultProps`.
 - Use `useCurrentFrame()` + `spring()` / `interpolate()` for animation; avoid CSS transitions (they don't render frame-accurately).
-- Currently one composition: `DemoComposition` (1920×1080, 78s at 30fps).
+- No compositions are registered yet; the registry in `src/Root.tsx` is empty.
 - `out/` and `public/` are gitignored — render outputs stay local.
 - This is the public scaffold; NBG-specific and personal compositions live in `remotion-private`.
