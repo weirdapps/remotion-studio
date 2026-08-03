@@ -4,7 +4,7 @@ Programmatic video creation with React and Remotion.
 
 [![CI](https://github.com/weirdapps/remotion-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/weirdapps/remotion-studio/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-20-brightgreen)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-24-brightgreen)](https://nodejs.org/)
 
 Compositions are written as React components using the Remotion 4 primitives (`AbsoluteFill`, `Sequence`, `Audio`, `Img`, `useCurrentFrame`, `spring`, `interpolate`). Preview is served by the Remotion Studio browser UI with hot reload; rendering runs headlessly through the Remotion CLI or through the small programmatic wrapper `render.mts` that ships with the repo.
 
@@ -20,7 +20,8 @@ Compositions are registered in [`src/Root.tsx`](src/Root.tsx). The registry is c
 
 ## Requirements
 
-- Node.js 20 (the version pinned in CI).
+- Node.js 22 or newer, enforced by the `engines` field in `package.json`. CI pins Node 24, the version the test suite is verified against. The floor is 22 because `@testing-library/jest-dom` 7 requires Node >= 22 and `jsdom` 30 requires `^22.22.2 || ^24.15.0 || >=26.0.0`.
+- ffmpeg on `PATH` for rendering (`brew install ffmpeg`).
 
 ## Install
 
@@ -83,6 +84,7 @@ Output goes to `out/` (gitignored). `.mp4` and `.webm` files are also gitignored
 - [`tsconfig.json`](tsconfig.json): ES2022, `moduleResolution: bundler`, `jsx: react-jsx`, strict mode on, output at `dist/` (Remotion bundles do not use this; it exists for type declarations).
 - [`vitest.config.ts`](vitest.config.ts): `happy-dom` environment, tests under `test/`.
 - [`eslint.config.js`](eslint.config.js): flat config, TypeScript + Prettier compatibility.
+- [`package.json`](package.json) `overrides`: pins transitive `postcss` and `brace-expansion` above their advisory ranges so `npm audit` stays clean.
 - No `remotion.config.ts` is present; the Remotion CLI uses its defaults.
 
 ## Scripts

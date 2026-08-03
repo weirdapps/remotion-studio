@@ -11,6 +11,8 @@ Programmatic video creation with React + Remotion. Write compositions as React c
 
 ## Prerequisites
 
+Node.js 22 or newer (`engines` floor in `package.json`; CI pins 24).
+
 ```bash
 brew install ffmpeg
 npm install

@@ -10,6 +10,6 @@ jobs:
   refresh:
     uses: weirdapps/shared-workflows/.github/workflows/deps-refresh.yml@main
     with:
-      node_version: '20'
+      node_version: '24'
       gate_cmd: npm test
     secrets: inherit
