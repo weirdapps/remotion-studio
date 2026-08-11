@@ -17,6 +17,18 @@ updates:
     commit-message:
       prefix: 'deps'
       include: 'scope'
+    ignore:
+      # TypeScript 7.x is not installable here: every published
+      # @typescript-eslint release (8.67.0 at time of writing) declares
+      # peer typescript ">=4.8.4 <6.1.0", so npm exits with ERESOLVE and the
+      # Dependabot job dies with dependency_file_not_resolvable
+      # (run 29731118406, 2026-07-20). PR #35 was closed with the decision to
+      # stay on 6.x until a deliberate TS 7 migration. Drop this entry once
+      # @typescript-eslint ships a peer range that admits 7.x. Minor and patch
+      # updates, including security fixes on 6.x, are unaffected.
+      - dependency-name: 'typescript'
+        update-types:
+          - 'version-update:semver-major'
     groups:
       development-dependencies:
         dependency-type: 'development'
