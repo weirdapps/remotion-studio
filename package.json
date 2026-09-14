@@ -16,8 +16,8 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@remotion/bundler": "^4.0.520",
-    "@remotion/cli": "^4.0.520",
+    "@remotion/bundler": "^4.0.523",
+    "@remotion/cli": "^4.0.523",
     "@remotion/renderer": "^4.0.505",
     "react": "^19",
     "react-dom": "^19",
@@ -29,7 +29,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/react": "^19",
-    "@types/react-dom": "19.2.7",
+    "@types/react-dom": "19.3.0",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
     "@vitejs/plugin-react": "^6.1.1",
