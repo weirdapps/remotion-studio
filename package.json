@@ -16,12 +16,12 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@remotion/bundler": "^4.0.524",
-    "@remotion/cli": "^4.0.524",
-    "@remotion/renderer": "^4.0.505",
+    "@remotion/bundler": "^4.0.526",
+    "@remotion/cli": "^4.0.526",
+    "@remotion/renderer": "^4.0.526",
     "react": "^19",
     "react-dom": "^19",
-    "remotion": "^4.0.505"
+    "remotion": "^4.0.526"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
