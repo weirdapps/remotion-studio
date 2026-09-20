@@ -30,6 +30,28 @@ updates:
         update-types:
           - 'version-update:semver-major'
     groups:
+      # First, and deliberately without update-types, so it also catches
+      # majors. remotion, @remotion/bundler, @remotion/cli and
+      # @remotion/renderer must move as one set: a split set installs fine and
+      # type-checks fine, then fails at RENDER time, so CI stays green while
+      # the artefact is broken. That is worse than a build break, because
+      # nothing points at it. The production-dependencies group below is capped
+      # at minor/patch, so a major would fall out of it entirely and Dependabot
+      # would open one PR per package, which is exactly the split this prevents.
+      remotion:
+        patterns:
+          - 'remotion'
+          - '@remotion/*'
+      # The same family again, because `applies-to` defaults to
+      # 'version-updates' and a group without it never bundles SECURITY
+      # updates: those arrive one PR per vulnerable package, which reintroduces
+      # the split at the worst moment. Same reasoning as the vitest-security
+      # group in telegram-bot's config.
+      remotion-security:
+        applies-to: security-updates
+        patterns:
+          - 'remotion'
+          - '@remotion/*'
       development-dependencies:
         dependency-type: 'development'
         update-types:
@@ -40,6 +62,9 @@ updates:
         update-types:
           - 'minor'
           - 'patch'
+        exclude-patterns:
+          - 'remotion'
+          - '@remotion/*'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
